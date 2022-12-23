@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: goserver
-          image: "andrecupini/hello-go:v4"
+          image: "andrecupini/hello-go:v4.2"
           resources:
             limits:
               cpu: "500m"
@@ -24,6 +24,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: goserver-env
+            - secretRef:
+                name: goserver-secret
 
           volumeMounts:
             - mountPath: "/go/myfamily"
