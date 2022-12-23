@@ -16,7 +16,28 @@ spec:
     spec:
       containers:
         - name: goserver
-          image: "andrecupini/hello-go:v4.2"
+          image: "andrecupini/hello-go:latest"
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            periodSeconds: 3
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            periodSeconds: 3
+            failureThreshold: 1
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            periodSeconds: 5
+            failureThreshold: 1
+            timeoutSeconds: 1
+            successThreshold: 1
+            initialDelaySeconds: 15
           resources:
             limits:
               cpu: "500m"
@@ -26,11 +47,9 @@ spec:
                 name: goserver-env
             - secretRef:
                 name: goserver-secret
-
           volumeMounts:
             - mountPath: "/go/myfamily"
               name: config
-
       volumes:
         - name: config
           configMap:
